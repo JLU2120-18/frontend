@@ -1,0 +1,9 @@
+{
+  "cSpell.words": [
+    "ahooks",
+    "antd",
+    "Sider",
+    "zustand"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

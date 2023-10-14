@@ -14,12 +14,17 @@
     "*.(ts|tsx)": "pnpm lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "ahooks": "^3.7.8",
     "antd": "^5.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.16.0"
+    "react-router-dom": "^6.16.0",
+    "zustand": "^4.4.3"
   },
   "devDependencies": {
+    "@iconify-json/ant-design": "^1.1.10",
+    "@types/node": "^20.8.6",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
