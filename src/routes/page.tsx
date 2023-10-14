@@ -1,11 +1,8 @@
 import React from 'react';
 import { Button, Space, DatePicker, Typography } from 'antd';
 
-const App = React.memo(() => (
-  <div
-    p={'3'}
-    m={'12'}
-  >
+const AppPage = React.memo(() => (
+  <>
     <Typography.Title>
       Prophet Salary Manage System
     </Typography.Title>
@@ -13,7 +10,7 @@ const App = React.memo(() => (
       <DatePicker />
       <Button type="primary">Primary Button</Button>
     </Space>
-  </div>
+  </>
 ));
 
-export default App;
+export default AppPage;
