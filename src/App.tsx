@@ -7,7 +7,7 @@ const App = React.memo(() => (
     m={'12'}
   >
     <Typography.Title>
-      Bill Manage System INIT
+      Prophet Salary Manage System
     </Typography.Title>
     <Space>
       <DatePicker />
