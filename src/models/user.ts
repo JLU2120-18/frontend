@@ -1,10 +1,10 @@
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
 
 export interface UserInfo {
   id: string;
   username: string;
-  avatar: string;
+  role: 'employee' | 'commission' | 'payroll';
+  jwt: string;
 }
 
 interface State {
@@ -15,22 +15,15 @@ interface State {
 
 
 export const useUserStore = create<State>()(
-  devtools(
-    persist(
-      (set) => ({
-        userInfo: {},
-        setUserInfo: (userInfo: UserInfo) => set((state) => {
-          state.userInfo = userInfo;
-          return state;
-        }),
-        reset: () => set((state) => {
-          state.userInfo = {};
-          return state;
-        }),
-      }),
-      {
-        name: 'user-store',
-      },
-    ),
-  ),
+  (set) => ({
+    userInfo: {},
+    setUserInfo: (userInfo: UserInfo) => set((state) => {
+      state.userInfo = userInfo;
+      return state;
+    }),
+    reset: () => set((state: State) => {
+      state.userInfo = {};
+      return state;
+    }),
+  }),
 );
