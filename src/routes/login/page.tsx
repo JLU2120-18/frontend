@@ -4,6 +4,7 @@ import { LoginReq } from '@/requests';
 import { useRequest } from 'ahooks';
 import { UserInfo, useUserStore } from '@/models';
 import { useNavigate } from 'react-router-dom';
+import { required } from '@/utils';
 
 const LoginPage = React.memo(() => {
   const [form] = Form.useForm();
@@ -33,11 +34,20 @@ const LoginPage = React.memo(() => {
           <Form
             form={form}
             layout={'vertical'}
+            onFinish={() => loginReq.run(form.getFieldsValue())}
           >
-            <Form.Item label={'用户名'} name={'username'}>
+            <Form.Item
+              label={'用户名'}
+              name={'username'}
+              rules={[required()]}
+            >
               <Input size={'large'} />
             </Form.Item>
-            <Form.Item label={'密码'} name={'password'}>
+            <Form.Item
+              label={'密码'}
+              name={'password'}
+              rules={[required()]}
+            >
               <Input.Password size={'large'} />
             </Form.Item>
             <div className={'flex justify-between items-center pb5'}>
@@ -45,20 +55,22 @@ const LoginPage = React.memo(() => {
                 <Checkbox>记住我</Checkbox>
               </Form.Item>
               <Form.Item noStyle>
-                <Typography.Link className={'h-fit'} href={'/register'}>
+                <Typography.Link disabled className={'h-fit'} href={'/register'}>
                   没有帐号？
                 </Typography.Link>
               </Form.Item>
             </div>
-            <Button
-              type={'primary'}
-              className={'w-full'}
-              size={'large'}
-              onClick={() => loginReq.run(form.getFieldsValue())}
-              loading={loginReq.loading}
-            >
-              登录
-            </Button>
+            <Form.Item>
+              <Button
+                type={'primary'}
+                className={'w-full'}
+                size={'large'}
+                loading={loginReq.loading}
+                htmlType={'submit'}
+              >
+                登录
+              </Button>
+            </Form.Item>
           </Form>
         </Card>
       </div>

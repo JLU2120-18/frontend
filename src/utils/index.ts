@@ -3,3 +3,5 @@ export const sleep = async (ms:number) => {
     setTimeout(() => sol(), ms);
   });
 };
+
+export * from './form-rules.ts';
