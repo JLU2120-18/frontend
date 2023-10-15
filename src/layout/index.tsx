@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Layout, Menu, theme, Typography } from 'antd';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
-import { useRouteStore, useUserStore } from '@/models';
+import { useUserStore } from '@/models';
 
 const { Header, Content, Sider } = Layout;
 
@@ -19,23 +19,6 @@ function item(
   };
 }
 
-// const items: MenuItem[] = [
-//   item('Option 1', '1', <PieChartOutlined />),
-//   item('Option 2', '2', <DesktopOutlined />),
-//   item('User', 'sub1', <UserOutlined />, [
-//     item('Tom', '3'),
-//     item('Bill', '4'),
-//     item('Alex', '5'),
-//   ]),
-//   item('Team', 'sub2', <TeamOutlined />, [item('Team 1', '6'), item('Team 2', '8')]),
-//   item('Files', '9', <FileOutlined />),
-// ];
-
-const items = [
-  item('主页', '/'),
-  item('退出登录', '/logout'),
-];
-
 const AppLayout = React.memo(() => {
   const [collapsed, setCollapsed] = React.useState(false);
   const handleClick = React.useCallback(
@@ -50,6 +33,29 @@ const AppLayout = React.memo(() => {
   const { token:{ colorBgContainer } } = theme.useToken();
 
   const location = useLocation();
+  const userModel = useUserStore();
+  const { role } = userModel.userInfo;
+
+  const items = React.useMemo(
+    () => {
+      switch (role) {
+      case 'employee':
+      case 'commission':
+        return [
+          item('主页', '/'),
+          item('考勤卡', '/timecard'),
+          item('退出','/logout'),
+        ];
+      case 'payroll':
+        return [
+          item('主页', '/'),
+          item('退出','/logout'),
+        ];
+      }
+      return [];
+    },
+    [role],
+  );
 
   const defaultKey = React.useMemo(
     () => {
@@ -58,20 +64,10 @@ const AppLayout = React.memo(() => {
         .filter((key) => location.pathname.startsWith(key))
         .sort((a, b) => b.length - a.length)[0] ?? '';
     },
-    [],
+    [location.pathname],
   );
 
-  const userModel = useUserStore();
-  const { username, role } = userModel.userInfo;
-  const routeModel = useRouteStore();
-  React.useEffect(
-    () => {
-      console.log('role='+role);
-      if (role)
-        routeModel.loadRole(role);
-    },
-    [role],
-  );
+  const { username } = userModel.userInfo;
 
   return (
     <Layout className={'min-h-screen'}>

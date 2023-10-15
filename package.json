@@ -17,6 +17,7 @@
     "@ant-design/icons": "^5.2.6",
     "ahooks": "^3.7.8",
     "antd": "^5.10.0",
+    "mockjs": "^1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@iconify-json/ant-design": "^1.1.10",
+    "@types/mockjs": "^1.0.8",
     "@types/node": "^20.8.6",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
