@@ -100,13 +100,6 @@ const AppPage = React.memo(() => {
     [getUserInfoReq.data],
   );
 
-  React.useEffect(
-    () => {
-      console.log(dataSource);
-    },
-    [dataSource],
-  );
-
   const CommonTable = React.useCallback(
     (props: TableProps<any>) => (
       <Table

@@ -1,1 +1,2 @@
-export * from './useQuery.tsx';
+export * from './useQuery';
+export * from './useAuth';

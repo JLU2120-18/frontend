@@ -5,6 +5,7 @@ import RegisterPage from '@/routes/register/page.tsx';
 import LogoutPage from '@/routes/logout/page.tsx';
 import Layout from '@/layout';
 import AppPage from '@/routes/page.tsx';
+import TimeCardPage from '@/routes/timecard/page.tsx';
 
 interface State {
   routes: RouteObject[];
@@ -17,6 +18,7 @@ const defaultRoutes: RouteObject[] = [
   { path: '/logout', element: <LogoutPage /> },
   { path: '/', element: <Layout /> , children: [
     { index: true, element: <AppPage /> },
+    { path: 'timecard', element: <TimeCardPage /> },
   ] },
 ];
 
