@@ -12,7 +12,7 @@ export function useAuth(role: ('employee' | 'commission' | 'payroll')[]) {
 
   React.useLayoutEffect(
     () => {
-      if (!role.includes(userRole)) {
+      if (!userRole || !role.includes(userRole)) {
         message.error('你没有权限进入此页面');
         navigate('/');
       }

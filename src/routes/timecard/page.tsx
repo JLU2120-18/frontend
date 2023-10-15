@@ -14,8 +14,8 @@ const TimeCardPage = React.memo(() => {
       message.success('提报考勤卡成功');
       pagination.refresh();
     },
-    onError: (message: RequestHeadersMessage) => {
-      message.error('提报考勤卡失败，' + message);
+    onError: () => {
+      message.error('提报考勤卡失败');
     },
   });
 
@@ -23,7 +23,7 @@ const TimeCardPage = React.memo(() => {
     submitTimeCardReq.run({
       id: values.id,
       duration: values.duration,
-      jwt,
+      jwt: jwt ?? '',
     });
   };
 
@@ -45,7 +45,7 @@ const TimeCardPage = React.memo(() => {
           )}
         </div>
       ) },
-      { title: '工时', dataIndex: 'duration', render: (v: number, record) => (
+      { title: '工时', dataIndex: 'duration', render: (v: number, record: Record<string, any>) => (
         <SubmitDurationButton
           onSubmit={handleSubmit}
           loading={submitTimeCardReq.loading}
@@ -60,7 +60,7 @@ const TimeCardPage = React.memo(() => {
   );
 
   const userModel = useUserStore();
-  const { jwt } = userModel.userInfo;
+  const { jwt = '' } = userModel.userInfo;
   const pagination = usePagination((params) => GetTimeCardReq({ ...params, jwt }));
 
   return (
@@ -68,7 +68,6 @@ const TimeCardPage = React.memo(() => {
       <Typography.Title>考勤卡</Typography.Title>
       <Divider>所有考勤</Divider>
       <Pagination
-        total={pagination.data?.total}
         {...pagination.pagination}
         disabled={pagination.loading}
       />

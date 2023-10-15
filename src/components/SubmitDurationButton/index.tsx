@@ -3,7 +3,7 @@ import { Button, Form, InputNumber, Popover, Space } from 'antd';
 
 interface Props {
   record: Record<string, any>;
-  v: boolean;
+  v: number;
   onSubmit?: (data: Record<string, any>) => void;
   loading?: boolean;
 }
