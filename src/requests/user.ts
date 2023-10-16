@@ -1,4 +1,5 @@
 import { sleep } from '@/utils';
+import Mock from 'mockjs';
 
 interface LoginReqParams {
   username: string;
@@ -39,26 +40,57 @@ export const RegisterReq = async (params: RegisterReqParams) => {
 interface GetUserInfoReqParam {
   jwt: string
 }
-export const GetUserInfoReq = async (params: GetUserInfoReqParam) => {
+
+interface GetUserInfoRes {
+  id: string;
+  username: string;
+  address: string;
+  phone: string;
+  socsec_id: string;
+  tax_rate: 0.1;
+  other_cast: 50;
+  type: 'salary' | 'commission' | 'wage';
+  payment: 'bank' | 'receive' | 'mail';
+  salary: number;
+  duration_limit: number;
+  bank_name?: string;
+  bank_account?: string;
+  mail_address?: string;
+}
+export const GetUserInfoReq = async (params: GetUserInfoReqParam): Promise<GetUserInfoRes> => {
   await sleep(1000);
   console.log(params);
 
-  return {
-    id: 'liangyihong',
-    username: '梁毅宏',
-    address: '翻斗花园二号楼1001室',
-    phone: '+86 11144551144',
+  return Mock.mock({
+    id: '@id',
+    username: '@first',
+    address: '@address',
+    phone: '@phone',
 
-    socsec_id: '1123 4567 8901 23',
-    tax_rate: 0.1,
-    other_cast: 50,
+    socsec_id: '@guid',
+    tax_rate: '@natural',
+    'other_cast|90-250': 1,
 
-    type: 'salary' as ('salary' | 'commission' | 'wage'),
+    type: 'salary',
     payment: 'bank',
     salary: 3000,
     duration_limit: 40,
 
     bank_name: '汇丰渣打银行',
     bank_account: '89634 29834814',
-  };
+  });
+};
+
+interface UpdatePaymentRequest {
+  jwt: string;
+  payment: 'mail' | 'receive' | 'bank';
+  bank_name?: string;
+  bank_account?: string;
+  mail_address?: string;
+}
+export const UpdatePaymentReq = async (params: UpdatePaymentRequest) => {
+  await sleep(2000);
+  console.log(params);
+
+  return {};
 };

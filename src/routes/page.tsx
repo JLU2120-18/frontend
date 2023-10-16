@@ -1,14 +1,16 @@
 import React from 'react';
-import { Divider, Table, TableProps, Typography } from 'antd';
+import { Button, Divider, Table, TableProps, Typography } from 'antd';
 import { useUserStore } from '@/models';
 import { useRequest } from 'ahooks';
 import { GetUserInfoReq } from '@/requests';
 import { ColumnsType } from 'antd/es/table';
-import { BaseDataType, BusinessDataType, SocietyDataType } from '@/routes/type.ts';
+import { BaseDataType, BusinessDataType, SocietyDataType } from './type';
+import { CreateEmployeeReportModal, UpdatePaymentButton, UpdatePaymentModal } from '@/components';
+import { toCamel } from '@/utils';
 
 const AppPage = React.memo(() => {
   const userModel  = useUserStore();
-  const { username, role, jwt }  = userModel.userInfo;
+  const { username, role, jwt = '' }  = userModel.userInfo;
 
   const displayRole = React.useMemo(
     () => role === 'employee' ? 'Employee'
@@ -20,6 +22,11 @@ const AppPage = React.memo(() => {
 
   const getUserInfoReq = useRequest(GetUserInfoReq, {
     defaultParams: [{ jwt: jwt ?? '' }],
+    onSuccess: (data) => {
+      userModel.setBusinessInfo({
+        ...data,
+      });
+    },
   });
 
   const BASE_COLUMN = React.useMemo(
@@ -47,6 +54,7 @@ const AppPage = React.memo(() => {
     [],
   );
 
+  const [open, setOpen] = React.useState(false);
   const BUSINESS_COLUMN = React.useMemo(
     () => {
       if (!getUserInfoReq.data) return [];
@@ -56,12 +64,7 @@ const AppPage = React.memo(() => {
           v === 'salary' ? '月薪'
             :v === 'wage' ? '时薪'
               : v === 'commission' ? '佣金' : 'UNKNOWN' },
-
-        { title: '发薪方式', dataIndex: 'payment', render: (v) =>
-          v === 'receive' ? '领取'
-            : v === 'bank' ? '银行付款'
-              : v === 'mail' ? '邮件' : 'UNKNONW',
-        },
+        { title: '发薪方式', dataIndex: 'payment', render: (v) => <UpdatePaymentButton v={v} onClick={() => setOpen(true)} /> },
         { title: '工时限制/时', dataIndex: 'duration_limit' },
       ];
       switch (type) {
@@ -119,14 +122,29 @@ const AppPage = React.memo(() => {
     [],
   );
 
+  const handleOk = () => {
+    setOpen(false);
+    getUserInfoReq.run({ jwt });
+  };
+
+  const [reportOpen, setReportOpen] = React.useState(false);
+
   return (
     <>
       <Typography.Title>
         <Typography.Text className={'text-3xl'}>{username}</Typography.Text>
-        <Typography.Text className={'text-2xl ml-1xl ' + roleColor}>{displayRole}</Typography.Text>
-        <Typography.Text className={'text-2xl ml-5xl'}>
+        <Typography.Text className={'text-2xl ' + roleColor}>{displayRole}</Typography.Text>
+        <Typography.Text className={'text-2xl ml-xl'}>
           您好，您的个人信息如下：
         </Typography.Text>
+      </Typography.Title>
+      <Typography.Title level={2} className={'flex items-center'}>
+        <Typography.Text className={'text-2xl'}>
+          您可以
+        </Typography.Text>
+        <Button type={'primary'} onClick={() => setReportOpen(true)}>
+          生成报告
+        </Button>
       </Typography.Title>
       <Divider>基本信息</Divider>
       <CommonTable columns={BASE_COLUMN} />
@@ -143,6 +161,16 @@ const AppPage = React.memo(() => {
           <CommonTable columns={OTHER_COLUMN}/>
         </>
       ) : null}
+      <UpdatePaymentModal
+        {...toCamel(getUserInfoReq.data ?? {})}
+        open={open}
+        onOk={handleOk}
+        onCancel={() => setOpen(false)}
+      />
+      <CreateEmployeeReportModal
+        open={reportOpen}
+        onCancel={() => setReportOpen(false)}
+      />
     </>
   );
 });

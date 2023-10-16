@@ -17,6 +17,9 @@
     "@ant-design/icons": "^5.2.6",
     "ahooks": "^3.7.8",
     "antd": "^5.10.0",
+    "dayjs": "^1.11.10",
+    "html2canvas": "^1.4.1",
+    "lodash-es": "^4.17.21",
     "mockjs": "^1.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -25,6 +28,7 @@
   },
   "devDependencies": {
     "@iconify-json/ant-design": "^1.1.10",
+    "@types/lodash-es": "^4.17.9",
     "@types/mockjs": "^1.0.8",
     "@types/node": "^20.8.6",
     "@types/react": "^18.2.15",

@@ -1,5 +1,5 @@
-import Mock from 'mockjs';
 import { sleep } from '@/utils';
+import Mock from 'mockjs';
 
 interface GetTimeCardRequest {
   current: number;
@@ -10,24 +10,32 @@ export const GetTimeCardReq = async ({ pageSize }: GetTimeCardRequest) => {
   await sleep(1000);
   return Mock.mock({
     total: 100,
-    [`list|${pageSize}`]: [
+    [`data|${pageSize}`]: [
       {
         id: '@guid',
-        is_save: '@boolean',
-        start_time: '@datetime',
-        end_time: '@datetime',
-        'duration|10-40': 10,
+        isSave: '@boolean',
+        'data|1-3': [
+          {
+            projectName: '@last',
+            'duration|10-40': 10,
+          },
+        ],
+        startTime: '@datetime',
+        endTime: '@datetime',
       },
     ],
   });
 };
 
-interface SubmitTimeCardRequest {
+interface UpdateTimeCardRequest {
   id: string;
   jwt: string;
-  duration: number;
+  data: {
+    projectName: string;
+    duration: number;
+  }[];
 }
-export const SubmitTimeCardReq = async (params: SubmitTimeCardRequest) => {
+export const UpdateTimeCardReq = async (params: UpdateTimeCardRequest) => {
   await sleep(4000);
   console.log(params);
   return {};
