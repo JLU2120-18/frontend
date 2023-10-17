@@ -158,14 +158,12 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
             <Typography.Title level={2} className={'text-center'}>
               {TYPE_MAP[form.getFieldValue('type')]}报告
             </Typography.Title>
-            <div className={'flex justify-between'}>
-              <Typography.Title level={4}>
-                {username}({ROLE_MAP[role]}) #{id}
-              </Typography.Title>
-              <Typography.Title level={4}>
+            <Typography.Title level={4} className={'text-center'}>
+              {username}({ROLE_MAP[role]}) #{id}
+            </Typography.Title>
+            <Typography.Title level={4} className={'text-center'}>
               生成时间：{dayjs().format('YYYY-MM-DD hh:mm:ss')}
-              </Typography.Title>
-            </div>
+            </Typography.Title>
             <Table
               bordered
               columns={COLUMNS}
