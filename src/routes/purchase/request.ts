@@ -5,6 +5,7 @@ interface GetPurchaseOrderRequest {
   jwt: string;
   pageIndex: number;
   pageSize: number;
+  id?: string;
 }
 
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, message, Popover } from 'antd';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { DeletePurchaseReq } from '@/requests/purchase.ts';
 
@@ -29,29 +29,26 @@ export const DeletePurchaseOrderButton = React.memo((props: Props) => {
   };
 
   return (
-    <div className={'flex gap-3'}>
-      <Button size={'small'} icon={<EyeOutlined />} />
-      <Button size={'small'} icon={<EditOutlined />} />
-      <Popover
-        open={open}
-        content={(
-          <Button
-            type={'primary'}
-            danger
-            onClick={() => handleDelete()}
-          >
-            确认删除
-          </Button>
-        )}
-      >
+    <Popover
+      open={open}
+      content={(
         <Button
+          type={'primary'}
           danger
-          size={'small'}
-          icon={<DeleteOutlined style={{ color: 'red' }}/>}
-          onClick={() => setOpen(open => !open)}
-          loading={deletePurchaseOrderReq.loading}
-        />
-      </Popover>
-    </div>
+          onClick={handleDelete}
+        >
+          确认删除
+        </Button>
+      )}
+    >
+      <Button
+        danger
+        size={'small'}
+        icon={<DeleteOutlined style={{ color: 'red' }}/>}
+        onClick={() => setOpen(open => !open)}
+        loading={deletePurchaseOrderReq.loading}
+      />
+    </Popover>
+
   );
 });

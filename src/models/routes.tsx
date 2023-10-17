@@ -1,13 +1,12 @@
 import { create } from 'zustand';
 import { RouteObject } from 'react-router-dom';
-import LoginPage from '@/routes/login/page.tsx';
-import RegisterPage from '@/routes/register/page.tsx';
-import LogoutPage from '@/routes/logout/page.tsx';
+import LoginPage from '@/routes/login/page';
+import RegisterPage from '@/routes/register/page';
+import LogoutPage from '@/routes/logout/page';
 import Layout from '@/layout';
-import AppPage from '@/routes/page.tsx';
-import TimeCardPage from '@/routes/timecard/page.tsx';
-import PurchasePage from '@/routes/purchase/page.tsx';
-import PurchaseIdPage from '@/routes/purchase/[id]';
+import AppPage from '@/routes/page';
+import TimeCardPage from '@/routes/timecard/page';
+import PurchasePage from '@/routes/purchase/page';
 
 interface State {
   routes: RouteObject[];
@@ -22,7 +21,6 @@ const defaultRoutes: RouteObject[] = [
     { index: true, element: <AppPage /> },
     { path: 'timecard', element: <TimeCardPage /> },
     { path: 'purchase', element: <PurchasePage /> },
-    { path: 'purchase/:id', element: <PurchaseIdPage /> },
   ] },
 ];
 
