@@ -41,18 +41,6 @@ export const SubmitDurationButton = React.memo(({ record, limit, onOk }: Props) 
     setOpen(false);
   };
 
-  if (record.isSave) {
-    return (
-      <Table
-        bordered
-        columns={COLUMNS}
-        dataSource={record.data}
-        pagination={false}
-      />
-    );
-
-  }
-
   const listValidator = React.useMemo(
     () => ({
       validator: (_: unknown, data: any) => {
@@ -75,6 +63,17 @@ export const SubmitDurationButton = React.memo(({ record, limit, onOk }: Props) 
     }),
     [],
   );
+
+  if (record.isSave) {
+    return (
+      <Table
+        bordered
+        columns={COLUMNS}
+        dataSource={record.data}
+        pagination={false}
+      />
+    );
+  }
 
   return (
     <Popover open={open} content={(
