@@ -1,36 +1,26 @@
 import React from 'react';
 import { Divider, message, Pagination, Table, Typography } from 'antd';
-import { usePagination, useRequest } from 'ahooks';
-import { GetTimeCardReq, SubmitTimeCardReq } from '@/requests';
+import { usePagination } from 'ahooks';
+import { GetTimeCardReq } from '@/requests';
 import { SubmitDurationButton } from '@/components';
 import { useUserStore } from '@/models';
 import { useAuth } from '@/hooks';
 
 const TimeCardPage = React.memo(() => {
   useAuth(['employee', 'commission']);
-  const submitTimeCardReq = useRequest(SubmitTimeCardReq, {
-    manual: true,
-    onSuccess: () => {
-      message.success('提报考勤卡成功');
-      pagination.refresh();
-    },
-    onError: () => {
-      message.error('提报考勤卡失败');
-    },
-  });
 
-  const handleSubmit = (values: Record<string, any>) => {
-    submitTimeCardReq.run({
-      id: values.id,
-      duration: values.duration,
-      jwt: jwt ?? '',
-    });
+  const userModel = useUserStore();
+  const { duration_limit: limit } = userModel.businessInfo;
+  const pagination = usePagination((params) => GetTimeCardReq({ ...params, jwt }));
+  const handleOk = () => {
+    message.success('提报成功');
+    pagination.refresh();
   };
 
   const COLUMNS = React.useMemo(
     () => [
-      { title: 'ID', dataIndex: 'id' },
-      { title: '状态', dataIndex: 'is_save', render: (v: boolean) => (
+      { title: 'ID', dataIndex: 'id', key: 'id' },
+      { title: '状态', dataIndex: 'isSave', key: 'isSave', render: (v: boolean) => (
         <div className={'flex items-center gap-2'}>
           {v ? (
             <>
@@ -45,23 +35,22 @@ const TimeCardPage = React.memo(() => {
           )}
         </div>
       ) },
-      { title: '工时', dataIndex: 'duration', render: (v: number, record: Record<string, any>) => (
-        <SubmitDurationButton
-          onSubmit={handleSubmit}
-          loading={submitTimeCardReq.loading}
-          v={v}
-          record={record}
-        />
-      ) },
-      { title: '开始时间', dataIndex: 'start_time' },
-      { title: '结束时间', dataIndex: 'end_time' },
+      { title: '工时分配', dataIndex: 'data',
+        render: (_: any, record: Record<string, any>) => (
+          <SubmitDurationButton
+            onOk={handleOk}
+            record={record}
+            limit={limit}
+          />
+        ),
+      },
+      { title: '开始时间', dataIndex: 'startTime', key: 'startTime' },
+      { title: '结束时间', dataIndex: 'endTime', key: 'endTime' },
     ],
-    [submitTimeCardReq.loading, handleSubmit],
+    [limit],
   );
 
-  const userModel = useUserStore();
   const { jwt = '' } = userModel.userInfo;
-  const pagination = usePagination((params) => GetTimeCardReq({ ...params, jwt }));
 
   return (
     <>
@@ -72,8 +61,9 @@ const TimeCardPage = React.memo(() => {
         disabled={pagination.loading}
       />
       <Table
+        bordered
         columns={COLUMNS}
-        dataSource={pagination.data?.list}
+        dataSource={pagination.data?.data}
         loading={pagination.loading}
         pagination={false}
       />
