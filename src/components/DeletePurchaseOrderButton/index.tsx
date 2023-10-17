@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, message, Popover } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-import { DeletePurchaseReq } from '@/requests/purchase.ts';
+import { DeletePurchaseReq } from '@/requests/purchase';
 
 interface Props {
   id: string;

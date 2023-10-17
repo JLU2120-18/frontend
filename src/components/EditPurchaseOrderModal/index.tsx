@@ -3,7 +3,7 @@ import { DatePicker, Form, Input, InputNumber, Modal, ModalProps } from 'antd';
 import { PurchaseOrder } from '@/types';
 import { required } from '@/utils';
 import { useRequest } from 'ahooks';
-import { UpdatePurchaseOrderReq } from '@/components/EditPurchaseOrderModal/request.ts';
+import { UpdatePurchaseOrderReq } from './request';
 import { useUserStore } from '@/models';
 import dayjs from 'dayjs';
 

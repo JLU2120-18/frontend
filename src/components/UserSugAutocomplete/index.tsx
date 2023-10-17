@@ -1,7 +1,7 @@
 import React from 'react';
 import { AutoComplete, AutoCompleteProps } from 'antd';
 import { useRequest } from 'ahooks';
-import { UserSugReq } from '@/components/UserSugAutocomplete/request.ts';
+import { UserSugReq } from './request';
 import { debounce } from 'lodash-es';
 
 interface Props extends AutoCompleteProps {}
