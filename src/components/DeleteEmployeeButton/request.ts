@@ -4,7 +4,7 @@ interface DeletePurchaseRequest {
   jwt: string;
   id: string;
 }
-export const DeletePurchaseReq = async (params: DeletePurchaseRequest) => {
+export const DeleteEmployeeReq = async (params: DeletePurchaseRequest) => {
   await sleep(4000);
 
   console.log('delete purchase', params);

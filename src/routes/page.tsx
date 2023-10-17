@@ -7,16 +7,14 @@ import { ColumnsType } from 'antd/es/table';
 import { BaseDataType, BusinessDataType, SocietyDataType } from './type';
 import { CreateEmployeeReportModal, UpdatePaymentButton, UpdatePaymentModal } from '@/components';
 import { toCamel } from '@/utils';
+import { ROLE_MAP } from '@/constants';
 
 const AppPage = React.memo(() => {
   const userModel  = useUserStore();
-  const { username, role, jwt = '' }  = userModel.userInfo;
+  const { username = '', role = '', jwt = '' }  = userModel.userInfo;
 
   const displayRole = React.useMemo(
-    () => role === 'employee' ? 'Employee'
-      :role === 'commission' ? 'Commission Employee'
-        :role === 'payroll' ? 'Payroll Administrator'
-          : 'Unknown',
+    () => ROLE_MAP[role] ?? 'Unknown',
     [role],
   );
 

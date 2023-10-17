@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, message, Popover } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-import { DeletePurchaseReq } from './request';
+import { DeleteEmployeeReq } from './request';
 
 interface Props {
   id: string;
@@ -10,10 +10,10 @@ interface Props {
   onDelete?: (id: string) => void;
 }
 
-export const DeletePurchaseOrderButton = React.memo((props: Props) => {
+export const DeleteEmployeeButton = React.memo((props: Props) => {
   const { id, jwt, onDelete } = props;
 
-  const deletePurchaseOrderReq = useRequest(DeletePurchaseReq, {
+  const deleteEmployeeReq = useRequest(DeleteEmployeeReq, {
     manual: true,
     onSuccess: () => {
       message.success('删除成功');
@@ -24,7 +24,7 @@ export const DeletePurchaseOrderButton = React.memo((props: Props) => {
   const [open, setOpen] = React.useState(false);
 
   const handleDelete = () => {
-    deletePurchaseOrderReq.run({ jwt, id });
+    deleteEmployeeReq.run({ jwt, id });
     setOpen(false);
   };
 
@@ -46,7 +46,7 @@ export const DeletePurchaseOrderButton = React.memo((props: Props) => {
         size={'small'}
         icon={<DeleteOutlined style={{ color: 'red' }}/>}
         onClick={() => setOpen(open => !open)}
-        loading={deletePurchaseOrderReq.loading}
+        loading={deleteEmployeeReq.loading}
       />
     </Popover>
 

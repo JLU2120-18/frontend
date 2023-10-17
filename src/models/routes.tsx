@@ -7,6 +7,7 @@ import Layout from '@/layout';
 import AppPage from '@/routes/page';
 import TimeCardPage from '@/routes/timecard/page';
 import PurchasePage from '@/routes/purchase/page';
+import EmployeesPage from '@/routes/employee/page';
 
 interface State {
   routes: RouteObject[];
@@ -21,6 +22,7 @@ const defaultRoutes: RouteObject[] = [
     { index: true, element: <AppPage /> },
     { path: 'timecard', element: <TimeCardPage /> },
     { path: 'purchase', element: <PurchasePage /> },
+    { path: 'employee', element: <EmployeesPage /> },
   ] },
 ];
 
