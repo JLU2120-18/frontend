@@ -24,11 +24,11 @@ const LoginPage = React.memo(() => {
     <div className={'w-screen h-screen center'}>
       <div>
         <div className={'center gap-2'}>
-          <div className={'i-ant-design:account-book-filled'} text={'40px blue-7'} />
+          <div className={'i-ant-design:account-book-filled text-40px text-blue-7'} />
           <h2 className={'w-fit m0'}>Prophet Salary</h2>
         </div>
         <Card className={'shadow-md w-400px m10'}>
-          <h1 className={'mb9'} text={'blue-5 center'}>
+          <h1 className={'mb9 text-blue-5 text-center'}>
             登录你的账号
           </h1>
           <Form
