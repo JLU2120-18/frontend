@@ -29,10 +29,22 @@ export const EditPurchaseOrderModal = React.memo((props: Props) => {
     updatePurchaseOrderReq.run({ ...values, jwt });
   };
 
-  const newRecord = record ? {
-    ...record,
-    date: dayjs(record.date),
-  } : undefined;
+  const newRecord = React.useMemo(
+    () =>
+      record ? {
+        ...record,
+        date: dayjs(record.date),
+      } : undefined
+    ,
+    [record],
+  );
+
+  React.useEffect(
+    () => {
+      form.setFieldsValue(newRecord);
+    },
+    [newRecord],
+  );
 
   return (
     <Modal
