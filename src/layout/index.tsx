@@ -55,6 +55,7 @@ const AppLayout = React.memo(() => {
       case 'payroll':
         return [
           item('主页', '/'),
+          item('员工管理', '/employee'),
           item('退出','/logout'),
         ];
       }

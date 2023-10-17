@@ -1,20 +1,14 @@
 import React from 'react';
 import { Button, DatePicker, Form, Input, Modal, ModalProps, Select, Table, Typography } from 'antd';
 import { downloadHtml2Canvas, required } from '@/utils';
-import { CondFormItem } from '@/components';
+import { CondFormItem, UserSugAutoComplete } from '@/components';
 import { useRequest } from 'ahooks';
 import { useUserStore } from '@/models';
 import { CreateEmployeeReportReq, GetAvailableTimeCardReq } from './request';
 import dayjs from 'dayjs';
+import { ROLE_MAP } from '@/constants';
 
 interface Props extends ModalProps { }
-
-const TYPE_OPTIONS = [
-  { label: '总工时报表', value: 'duration' },
-  { label: '项目总工时报表', value: 'proj_duration' },
-  { label: '假期/病假', value: 'vacation' },
-  { label: '年度总发薪', value: 'salary' },
-];
 
 const COLUMNS = [
   { title: '员工ID', dataIndex: 'employeeId' },
@@ -44,15 +38,13 @@ const TYPE_MAP: Record<string, string> = {
   proj_duration: '项目总时长',
   vacation: '病假/假期',
   salary: '薪资',
+  employee_duration: '员工工作总时长',
+  employee_salary: '员工年度总发薪',
 };
 
-const ROLE_MAP: Record<string, string> = {
-  employee: 'Employee',
-  commission: 'Commission Employee',
-  payroll: 'Payroll Administrator',
-};
 
 export const CreateEmployeeReportModal = React.memo((props: Props) => {
+
   const [form] = Form.useForm();
   const getAvailableTimeCardReq = useRequest(GetAvailableTimeCardReq, {
     manual: true,
@@ -61,8 +53,20 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
     },
   });
 
-  const { jwt = '' } = useUserStore().userInfo;
+  const { jwt = '', role = '' } = useUserStore().userInfo;
 
+  const TYPE_OPTIONS = React.useMemo(
+    () => (role === 'payroll' ? [
+      { label: '员工总工时报表', value: 'employee_duration' },
+      { label: '员工年度总发薪', value: 'employee_salary' },
+    ] : []).concat( [
+      { label: '总工时报表', value: 'duration' },
+      { label: '项目总工时报表', value: 'proj_duration' },
+      { label: '假期/病假', value: 'vacation' },
+      { label: '年度总发薪', value: 'salary' },
+    ]),
+    [role],
+  );
 
   const availableIds = React.useMemo(
     () => {
@@ -97,7 +101,7 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
   };
 
   const userModel = useUserStore();
-  const { username  = '', role = '', id = '' } = userModel.userInfo;
+  const { username  = '', id = '' } = userModel.userInfo;
 
   return (
     <Modal
@@ -107,7 +111,7 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
       confirmLoading={createEmployeeReportReq.loading}
       width={900}
     >
-      <Form form={form} layout={'vertical'}>
+      <Form form={form} layout={'vertical'} initialValues={{ type: role === 'payroll' ? 'employee_duration' : 'duration' }}>
         <Form.Item
           name={'type'}
           label={'报告类型'}
@@ -118,6 +122,15 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
             options={TYPE_OPTIONS}
           />
         </Form.Item>
+        <CondFormItem
+          keys={['type']}
+          cond={(type: string) => type?.startsWith('employee_')}
+          name={'employeeId'}
+          label={'员工ID'}
+          rules={[required()]}
+        >
+          <UserSugAutoComplete />
+        </CondFormItem>
         <Form.Item
           name={'startTime'}
           label={'开始时间'}

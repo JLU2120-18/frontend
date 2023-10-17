@@ -2,25 +2,25 @@ import React from 'react';
 import { useAuth } from '@/hooks';
 import { Button, Input, message, Pagination, Table, Typography } from 'antd';
 import { usePagination } from 'ahooks';
-import { GetPurchaseOrderReq } from './request';
+import { GetEmployeeReq } from './request';
 import { useUserStore } from '@/models';
 import { ColumnProps } from 'antd/es/table';
-import { PurchaseOrder } from '@/types';
 import { EditOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import {
-  CreatePurchaseOrderModal,
-  DeletePurchaseOrderButton,
-  EditPurchaseOrderModal,
+  CreateEmployeeModal,
+  DeleteEmployeeButton,
+  EditEmployeeModal,
 } from '@/components';
+import { Employee } from '@/types';
 
-const PurchasePage = React.memo(() => {
-  useAuth(['commission']);
+const EmployeesPage = React.memo(() => {
+  useAuth(['payroll']);
 
   const userModel = useUserStore();
   const { jwt = '' } = userModel.userInfo;
   const [searchV, setSearchV] = React.useState('');
   const pagination = usePagination(
-    ({ current, pageSize }) => GetPurchaseOrderReq({
+    ({ current, pageSize }) => GetEmployeeReq({
       id: searchV,
       jwt,
       pageSize,
@@ -32,19 +32,14 @@ const PurchasePage = React.memo(() => {
     pagination.refresh();
   };
 
-  const [record, setRecord] = React.useState<PurchaseOrder>();
+  const [record, setRecord] = React.useState<Employee>();
   const [editOpen, setEditOpen] = React.useState(false);
-  const COLUMNS: ColumnProps<PurchaseOrder>[] =
+  const COLUMNS: ColumnProps<Employee>[] =
     React.useMemo(
       () => [
         { title: 'ID', dataIndex: 'id' },
-        { title: '负责人ID', dataIndex: 'employeeId' },
-        { title: '产品', dataIndex: 'productName' },
-        { title: '联系电话', dataIndex: 'phone' },
-        { title: '住址', dataIndex: 'address' },
-        { title: '日期', dataIndex: 'date' },
-        { title: '金额', dataIndex: 'pay' },
-        { title: '查看', render: (_: unknown, record: PurchaseOrder) => (
+        { title: '员工姓名', dataIndex: 'username' },
+        { title: '查看', render: (_: unknown, record: Employee) => (
           <div className={'flex gap-3'}>
             <Button
               size={'small'}
@@ -54,7 +49,7 @@ const PurchasePage = React.memo(() => {
                 setEditOpen(true);
               }}
             />
-            <DeletePurchaseOrderButton
+            <DeleteEmployeeButton
               onDelete={handleDelete}
               id={record.id}
               jwt={jwt}
@@ -73,7 +68,7 @@ const PurchasePage = React.memo(() => {
 
   const [createOpen, setCreateOpen] = React.useState(false);
   const handleCreateOk = (id: string) => {
-    message.success(`创建采购订单成功：${id}`);
+    message.success(`创建员工成功：${id}`);
     setCreateOpen(false);
     pagination.refresh();
   };
@@ -81,13 +76,13 @@ const PurchasePage = React.memo(() => {
   return (
     <>
       <div className={'flex justify-between items-center'}>
-        <Typography.Title> 采购订单 </Typography.Title>
+        <Typography.Title> 员工管理 </Typography.Title>
         <Button
           type={'primary'}
           icon={<PlusSquareOutlined />}
           onClick={() => setCreateOpen(true)}
         >
-          创建订单
+          创建员工
         </Button>
       </div>
       <div className={'flex justify-between'}>
@@ -111,13 +106,13 @@ const PurchasePage = React.memo(() => {
         dataSource={pagination.data?.data}
         pagination={false}
       />
-      <EditPurchaseOrderModal
+      <EditEmployeeModal
         record={record}
         open={editOpen}
         onOk={handleEditOk}
         onCancel={() => setEditOpen(false)}
       />
-      <CreatePurchaseOrderModal
+      <CreateEmployeeModal
         open={createOpen}
         onCreateOk={handleCreateOk}
         onCancel={() => setCreateOpen(false)}
@@ -126,4 +121,4 @@ const PurchasePage = React.memo(() => {
   );
 });
 
-export default PurchasePage;
+export default EmployeesPage;

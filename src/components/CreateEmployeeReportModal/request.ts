@@ -22,7 +22,8 @@ export const GetAvailableTimeCardReq = async (params: {jwt: string}) => {
 
 interface CreateEmployeeReportRequest {
   jwt: string;
-  type: 'duration' | 'proj_duration' | 'vacation' | 'salary';
+  type: 'duration' | 'proj_duration' | 'vacation' | 'salary' | 'employee_duration' | 'employee_salary';
+  employeeId?: string;
   startTime: string;
   endTime: string;
   timeCardId?: string;
@@ -75,6 +76,26 @@ export const CreateEmployeeReportReq = async (params: CreateEmployeeReportReques
         startTime: '@date',
         endTime: '@date',
         'salary|4000-8000': 1,
+      }],
+    });
+  case 'employee_duration':
+    return Mock.mock({
+      data: [{
+        employeeId: '@id',
+        employeeName: '@name',
+        startTime: '@date',
+        endTime: '@date',
+        duration: '@integer(40,50)',
+      }],
+    });
+  case 'employee_salary':
+    return Mock.mock({
+      data: [{
+        employeeId: '@id',
+        employeeName: '@name',
+        startTime: '@date',
+        endTime: '@date',
+        salary: '@integer(40000,50000)',
       }],
     });
   }

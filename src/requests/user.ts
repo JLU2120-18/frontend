@@ -15,7 +15,7 @@ export const LoginReq = async (params: LoginReqParams) => {
     id: '@id',
     username: '@first',
     // 'role|1': ['commission', 'employee', 'payroll'],
-    role: 'commission',
+    role: 'payroll',
     jwt: '@guid',
   });
 };
