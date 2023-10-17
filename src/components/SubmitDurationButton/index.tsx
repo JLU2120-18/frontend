@@ -34,9 +34,10 @@ export const SubmitDurationButton = React.memo(({ record, limit, onOk }: Props) 
     };
     delete newData.isSave;
 
+    // FIXME
     updateTimeCardReq.run({
       ...newData,
-    });
+    } as any);
     setOpen(false);
   };
 

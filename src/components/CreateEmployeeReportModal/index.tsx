@@ -19,7 +19,8 @@ const TYPE_OPTIONS = [
 const COLUMNS = [
   { title: '员工ID', dataIndex: 'employeeId' },
   { title: '员工姓名', dataIndex: 'employeeName' },
-  { title: '工时分配', dataIndex: 'data', render: (v) => {
+  // FIXME
+  { title: '工时分配', dataIndex: 'data', render: (v: any[]) => {
     return v?.length ? (
       <Table
         bordered
@@ -38,14 +39,14 @@ const COLUMNS = [
   { title: '薪水', dataIndex: 'salary' },
 ];
 
-const TYPE_MAP = {
+const TYPE_MAP: Record<string, string> = {
   duration: '工作总时长',
   proj_duration: '项目总时长',
   vacation: '病假/假期',
   salary: '薪资',
 };
 
-const ROLE_MAP = {
+const ROLE_MAP: Record<string, string> = {
   employee: 'Employee',
   commission: 'Commission Employee',
   payroll: 'Payroll Administrator',
@@ -96,7 +97,7 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
   };
 
   const userModel = useUserStore();
-  const { username, role, id } = userModel.userInfo;
+  const { username  = '', role = '', id = '' } = userModel.userInfo;
 
   return (
     <Modal
