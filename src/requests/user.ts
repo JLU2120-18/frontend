@@ -14,7 +14,8 @@ export const LoginReq = async (params: LoginReqParams) => {
   return Mock.mock({
     id: '@id',
     username: '@first',
-    'role|1': ['commission', 'employee', 'payroll'],
+    // 'role|1': ['commission', 'employee', 'payroll'],
+    role: 'commission',
     jwt: '@guid',
   });
 };

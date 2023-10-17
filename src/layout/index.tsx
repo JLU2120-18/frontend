@@ -40,10 +40,16 @@ const AppLayout = React.memo(() => {
     () => {
       switch (role) {
       case 'employee':
+        return [
+          item('主页', '/'),
+          item('考勤卡', '/timecard'),
+          item('退出','/logout'),
+        ];
       case 'commission':
         return [
           item('主页', '/'),
           item('考勤卡', '/timecard'),
+          item('采购订单', '/purchase'),
           item('退出','/logout'),
         ];
       case 'payroll':
