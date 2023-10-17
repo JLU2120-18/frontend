@@ -36,7 +36,6 @@ export const SubmitDurationButton = React.memo(({ record, limit, onOk }: Props) 
 
     updateTimeCardReq.run({
       ...newData,
-      data,
     });
     setOpen(false);
   };
