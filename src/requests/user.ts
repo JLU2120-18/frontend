@@ -8,15 +8,15 @@ interface LoginReqParams {
 }
 
 export const LoginReq = async (params: LoginReqParams) => {
-  await sleep(3000);
+  await sleep(1000);
   console.log(params);
 
-  return {
-    id: 'liangyihong',
-    username: '梁毅宏',
-    role: 'commission' as ('employee' | 'commission' | 'payroll'),
-    jwt: Array.from({ length: 1000 }, () => (Math.random() * 36).toString(36)).join(''),
-  };
+  return Mock.mock({
+    id: '@id',
+    username: '@first',
+    'role|1': ['commission', 'employee', 'payroll'],
+    jwt: '@guid',
+  });
 };
 
 interface RegisterReqParams {

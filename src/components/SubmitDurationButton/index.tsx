@@ -55,7 +55,7 @@ export const SubmitDurationButton = React.memo(({ record, limit, onOk }: Props) 
 
   const listValidator = React.useMemo(
     () => ({
-      validator: (_, data) => {
+      validator: (_: unknown, data: any) => {
         const keys = data.map(({ projectName }: any) => projectName);
         if (uniq(keys).length !== keys.length) {
           return Promise.reject(new Error('项目名有重复'));

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, DatePicker, Form, Input, Modal, ModalProps, Select, Table } from 'antd';
+import { Button, DatePicker, Form, Input, Modal, ModalProps, Select, Table, Typography } from 'antd';
 import { downloadHtml2Canvas, required } from '@/utils';
 import { CondFormItem } from '@/components';
 import { useRequest } from 'ahooks';
@@ -19,12 +19,37 @@ const TYPE_OPTIONS = [
 const COLUMNS = [
   { title: '员工ID', dataIndex: 'employeeId' },
   { title: '员工姓名', dataIndex: 'employeeName' },
-  { title: '项目名称', dataIndex: 'projectName' },
+  { title: '工时分配', dataIndex: 'data', render: (v) => {
+    return v?.length ? (
+      <Table
+        bordered
+        pagination={false}
+        columns={[
+          { title: '项目名称', dataIndex: 'projectName' },
+          { title: '工作时长', dataIndex: 'duration' },
+        ]}
+        dataSource={v}
+      />
+    ) : null;
+  } },
   { title: '时长', dataIndex: 'duration' },
   { title: '开始时间', dataIndex: 'startTime' },
   { title: '结束时间', dataIndex: 'endTime' },
   { title: '薪水', dataIndex: 'salary' },
 ];
+
+const TYPE_MAP = {
+  duration: '工作总时长',
+  proj_duration: '项目总时长',
+  vacation: '病假/假期',
+  salary: '薪资',
+};
+
+const ROLE_MAP = {
+  employee: 'Employee',
+  commission: 'Commission Employee',
+  payroll: 'Payroll Administrator',
+};
 
 export const CreateEmployeeReportModal = React.memo((props: Props) => {
   const [form] = Form.useForm();
@@ -59,9 +84,19 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
 
   const saveRef = React.useRef<HTMLDivElement | null>();
   const [reportName, setReportName] = React.useState('');
-  const handleDownload = () => {
-    downloadHtml2Canvas(saveRef.current!, reportName || '报表');
+  const [downloadLoading, setDownloadLoading] = React.useState(false);
+  const handleDownload = async () => {
+    setDownloadLoading(true);
+    try {
+      await downloadHtml2Canvas(saveRef.current!, reportName || '报表');
+    }
+    finally {
+      setDownloadLoading(false);
+    }
   };
+
+  const userModel = useUserStore();
+  const { username, role, id } = userModel.userInfo;
 
   return (
     <Modal
@@ -110,16 +145,28 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
           />
         </CondFormItem>
       </Form>
-      {createEmployeeReportReq.data ? (
+      {createEmployeeReportReq.data && !createEmployeeReportReq.loading ? (
         <>
           <div className={'flex items-center gap-4 mb-3'}>
             <Input placeholder={'你的报告名'} value={reportName} onChange={(e) => setReportName(e.target.value)}/>
-            <Button onClick={handleDownload} icon={<div className={'i-ant-design:download-outlined'}/>}>
+            <Button loading={downloadLoading} onClick={handleDownload} icon={<div className={'i-ant-design:download-outlined'}/>}>
               下载报告
             </Button>
           </div>
-          <div ref={(el) => saveRef.current = el}>
+          <div ref={(el) => saveRef.current = el} className={'px-8 pb-8'}>
+            <Typography.Title level={2} className={'text-center'}>
+              {TYPE_MAP[form.getFieldValue('type')]}报告
+            </Typography.Title>
+            <div className={'flex justify-between'}>
+              <Typography.Title level={4}>
+                {username}({ROLE_MAP[role]}) #{id}
+              </Typography.Title>
+              <Typography.Title level={4}>
+              生成时间：{dayjs().format('YYYY-MM-DD hh:mm:ss')}
+              </Typography.Title>
+            </div>
             <Table
+              bordered
               columns={COLUMNS}
               dataSource={createEmployeeReportReq.data.data}
               pagination={false}
