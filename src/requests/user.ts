@@ -14,8 +14,7 @@ export const LoginReq = async (params: LoginReqParams) => {
   return Mock.mock({
     id: '@id',
     username: '@first',
-    // 'role|1': ['commission', 'employee', 'payroll'],
-    role: 'payroll',
+    role: Mock.Random.pick(['employee', 'commission', 'payroll']),
     jwt: '@guid',
   });
 };
@@ -31,7 +30,7 @@ export const RegisterReq = async (params: RegisterReqParams) => {
   console.log(params);
 
   return {
-    id: '' + (Math.random() * 1000 | 0),
+    id: '',
     username: '' + (Math.random() * 100000 | 0),
     avatar: 'https://sdfsdf.dev/100x100.png',
     jwt: Array.from({ length: 1000 }, () => (Math.random() * 36).toString(36)),
