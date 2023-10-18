@@ -31,6 +31,7 @@ const COLUMNS = [
   { title: '开始时间', dataIndex: 'startTime' },
   { title: '结束时间', dataIndex: 'endTime' },
   { title: '薪水', dataIndex: 'salary' },
+  { title: '假日天数', dataIndex: 'days' },
 ];
 
 const TYPE_MAP: Record<string, string> = {
@@ -103,6 +104,18 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
   const userModel = useUserStore();
   const { username  = '', id = '' } = userModel.userInfo;
 
+  const actualColumns = React.useMemo(
+    () => {
+      const item = createEmployeeReportReq.data?.data[0];
+      if (item) {
+        const columns = Object.keys(item);
+        return COLUMNS.filter(({ dataIndex }) => (columns.includes(dataIndex)));
+      }
+      return [];
+    },
+    [createEmployeeReportReq.data],
+  );
+
   return (
     <Modal
       {...props}
@@ -111,7 +124,11 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
       confirmLoading={createEmployeeReportReq.loading}
       width={900}
     >
-      <Form form={form} layout={'vertical'} initialValues={{ type: role === 'payroll' ? 'employee_duration' : 'duration' }}>
+      <Form
+        form={form}
+        layout={'vertical'}
+        initialValues={{ type: role === 'payroll' ? 'employee_duration' : 'duration' }}
+      >
         <Form.Item
           name={'type'}
           label={'报告类型'}
@@ -179,7 +196,7 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
             </Typography.Title>
             <Table
               bordered
-              columns={COLUMNS}
+              columns={actualColumns}
               dataSource={createEmployeeReportReq.data.data}
               pagination={false}
             />

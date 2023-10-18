@@ -66,6 +66,7 @@ export const CreateEmployeeReportReq = async (params: CreateEmployeeReportReques
         employeeName: '@first',
         startTime: '@date',
         endTime: '@date',
+        days: '@integer(10,20)',
       }],
     });
   case 'salary':
