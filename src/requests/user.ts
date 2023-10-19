@@ -1,22 +1,15 @@
 import { sleep } from '@/utils';
-import Mock from 'mockjs';
+import { api } from '@/requests/main.ts';
 
 interface LoginReqParams {
-  username: string;
+  id: string;
   password: string;
   remember: boolean;
 }
 
 export const LoginReq = async (params: LoginReqParams) => {
-  await sleep(1000);
-  console.log(params);
-
-  return Mock.mock({
-    id: '@id',
-    username: '@first',
-    role: Mock.Random.pick(['employee', 'commission', 'payroll']),
-    jwt: '@guid',
-  });
+  const result = await api.post('/auth/login', params);
+  return result.data;
 };
 
 interface RegisterReqParams {
@@ -58,27 +51,9 @@ interface GetUserInfoRes {
   mail_address?: string;
 }
 export const GetUserInfoReq = async (params: GetUserInfoReqParam): Promise<GetUserInfoRes> => {
-  await sleep(1000);
-  console.log(params);
-
-  return Mock.mock({
-    id: '@id',
-    username: '@first',
-    address: '@address',
-    phone: '@phone',
-
-    socsec_id: '@guid',
-    tax_rate: '@natural',
-    'other_cast|90-250': 1,
-
-    type: 'salary',
-    payment: 'bank',
-    salary: 3000,
-    duration_limit: 40,
-
-    bank_name: '汇丰渣打银行',
-    bank_account: '89634 29834814',
-  });
+  return (await api.get('/employee/get', {
+    params,
+  })).data;
 };
 
 interface UpdatePaymentRequest {
@@ -89,8 +64,6 @@ interface UpdatePaymentRequest {
   mail_address?: string;
 }
 export const UpdatePaymentReq = async (params: UpdatePaymentRequest) => {
-  await sleep(2000);
-  console.log(params);
-
-  return {};
+  const result = await api.post('/employee/payment', params);
+  return result.data;
 };

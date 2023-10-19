@@ -7,6 +7,8 @@ import { useUserStore } from '@/models';
 import { CreateEmployeeReportReq, GetAvailableTimeCardReq } from './request';
 import dayjs from 'dayjs';
 import { ROLE_MAP } from '@/constants';
+// FIXME
+import { userExist } from '@/components/UserSugAutocomplete/utils.ts';
 
 interface Props extends ModalProps { }
 
@@ -82,10 +84,10 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
   });
   const handleOk = async () => {
     const values = await form.validateFields();
-    values.startTime = dayjs(values.startTime).format('YYYY-MM-DD');
-    values.endTime = dayjs(values.endTime).format('YYYY-MM-DD');
+    values.startTime = dayjs(values.startTime).format('YYYY-MM-DD hh:mm:ss');
+    values.endTime = dayjs(values.endTime).format('YYYY-MM-DD hh:mm:ss');
 
-    createEmployeeReportReq.run(values);
+    createEmployeeReportReq.run({ ...values, jwt });
   };
 
   const saveRef = React.useRef<HTMLDivElement | null>();
@@ -144,7 +146,11 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
           cond={(type: string) => type?.startsWith('employee_')}
           name={'employeeId'}
           label={'员工ID'}
-          rules={[required()]}
+          validateTrigger={'onBlur'}
+          rules={[
+            required(),
+            userExist(jwt),
+          ]}
         >
           <UserSugAutoComplete />
         </CondFormItem>
@@ -153,14 +159,14 @@ export const CreateEmployeeReportModal = React.memo((props: Props) => {
           label={'开始时间'}
           rules={[required()]}
         >
-          <DatePicker />
+          <DatePicker showTime />
         </Form.Item>
         <Form.Item
           name={'endTime'}
           label={'结束时间'}
           rules={[required()]}
         >
-          <DatePicker />
+          <DatePicker showTime />
         </Form.Item>
         <CondFormItem
           keys={['type']}

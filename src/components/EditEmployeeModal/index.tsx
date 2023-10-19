@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, InputNumber, Modal, ModalProps, Select } from 'antd';
+import { Form, Input, InputNumber, message, Modal, ModalProps, Select } from 'antd';
 import { Employee } from '@/types';
 import { required } from '@/utils';
 import { useRequest } from 'ahooks';
@@ -7,6 +7,7 @@ import { UpdateEmployeeReq } from './request';
 import { useUserStore } from '@/models';
 import { CondFormItem } from '@/components';
 import { SALARY_TYPE_OPTIONS } from '@/constants';
+import { useNavigate } from 'react-router-dom';
 
 interface Props extends ModalProps {
   record?: Employee;
@@ -18,9 +19,14 @@ export const EditEmployeeModal = React.memo((props: Props) => {
 
   const [form] = Form.useForm();
 
+  const navigate = useNavigate();
   const updateEmployeeReq = useRequest(UpdateEmployeeReq, {
     manual: true,
     onSuccess: onOk,
+    onError: () => {
+      message.error('身份信息过期，修改失败，请重新登录');
+      navigate('/login');
+    },
   });
   const { jwt = '' } = useUserStore().userInfo;
 

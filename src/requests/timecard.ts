@@ -1,30 +1,21 @@
-import { sleep } from '@/utils';
-import Mock from 'mockjs';
+import { api } from '@/requests/main.ts';
 
 interface GetTimeCardRequest {
-  current: number;
+  pageIndex: number;
   pageSize: number;
   jwt: string;
 }
-export const GetTimeCardReq = async ({ pageSize }: GetTimeCardRequest) => {
-  await sleep(1000);
-  return Mock.mock({
-    total: 100,
-    [`data|${pageSize}`]: [
-      {
-        id: '@guid',
-        isSave: '@boolean',
-        'data|1-3': [
-          {
-            projectName: '@last',
-            'duration|10-40': 10,
-          },
-        ],
-        startTime: '@datetime',
-        endTime: '@datetime',
-      },
-    ],
-  });
+export const GetTimeCardReq = async (params: GetTimeCardRequest) => {
+  const result = await api.get('/timecard/get', { params });
+  const data = result.data;
+
+  // FIXME
+  data.data = data.data.map(({ timeCard, data }: any) => ({
+    ...timeCard,
+    data,
+  }));
+
+  return data;
 };
 
 interface UpdateTimeCardRequest {
@@ -36,7 +27,6 @@ interface UpdateTimeCardRequest {
   }[];
 }
 export const UpdateTimeCardReq = async (params: UpdateTimeCardRequest) => {
-  await sleep(4000);
-  console.log(params);
-  return {};
+  const result = await api.post('/timecard/update', params);
+  return result.data;
 };

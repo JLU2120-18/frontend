@@ -1,10 +1,12 @@
 import React from 'react';
-import { DatePicker, Form, Input, InputNumber, Modal, ModalProps } from 'antd';
+import { DatePicker, Form, Input, InputNumber, message, Modal, ModalProps } from 'antd';
 import { required } from '@/utils';
 import { useUserStore } from '@/models';
 import { useRequest } from 'ahooks';
 import { CreatePurchaseOrderReq } from './request';
 import { UserSugAutoComplete } from '@/components';
+import { useNavigate } from 'react-router-dom';
+import { userExist } from '@/components/UserSugAutocomplete/utils.ts';
 
 interface Props extends ModalProps {
   onCreateOk?: (id: string) => void;
@@ -14,12 +16,16 @@ export const CreatePurchaseOrderModal = React.memo((props: Props) => {
   const [form] = Form.useForm();
   const { jwt = '' } = useUserStore().userInfo;
   const { onCreateOk } = props;
+  const navigate = useNavigate();
   const createPurchaseOrderReq = useRequest(CreatePurchaseOrderReq, {
     manual: true,
     onSuccess: ({ id }) => onCreateOk?.(id),
+    onError: () => {
+      message.error('身份信息过期，创建失败，请重新登录');
+      navigate('/login');
+    },
   });
   const handleOk = async () => {
-    console.log(form.getFieldsValue());
     const values = await form.validateFields();
     createPurchaseOrderReq.run({
       ...values,
@@ -41,7 +47,11 @@ export const CreatePurchaseOrderModal = React.memo((props: Props) => {
         <Form.Item
           name={'employeeId'}
           label={'负责员工'}
-          rules={[required()]}
+          validateTrigger={'onBlur'}
+          rules={[
+            required(),
+            userExist(jwt),
+          ]}
         >
           {/*<AutoComplete />*/}
           <UserSugAutoComplete />

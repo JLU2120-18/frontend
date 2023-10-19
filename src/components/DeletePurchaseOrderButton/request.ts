@@ -1,12 +1,10 @@
-import { sleep } from '@/utils';
+import { api } from '@/requests';
 
 interface DeletePurchaseRequest {
   jwt: string;
   id: string;
 }
 export const DeletePurchaseReq = async (params: DeletePurchaseRequest) => {
-  await sleep(4000);
-
-  console.log('delete purchase', params);
-  return {};
+  const result = await api.post('/purchase/delete', params);
+  return result.data;
 };

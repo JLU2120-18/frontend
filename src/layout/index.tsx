@@ -48,7 +48,6 @@ const AppLayout = React.memo(() => {
       case 'commission':
         return [
           item('主页', '/'),
-          item('考勤卡', '/timecard'),
           item('采购订单', '/purchase'),
           item('退出','/logout'),
         ];

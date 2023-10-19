@@ -1,13 +1,11 @@
 import { Employee } from '@/types';
-import { sleep } from '@/utils';
+import { api } from '@/requests';
 
 interface UpdateEmployeeRequest extends Employee {
   jwt: string;
 }
 
 export const UpdateEmployeeReq = async (params: UpdateEmployeeRequest) => {
-  await sleep(3000);
-
-  console.log('update employee', params);
-  return {};
+  const result = await api.post('/employee/update', params);
+  return result.data;
 };

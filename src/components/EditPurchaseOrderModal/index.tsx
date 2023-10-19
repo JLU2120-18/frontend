@@ -1,11 +1,12 @@
 import React from 'react';
-import { DatePicker, Form, Input, InputNumber, Modal, ModalProps } from 'antd';
+import { DatePicker, Form, Input, InputNumber, message, Modal, ModalProps } from 'antd';
 import { PurchaseOrder } from '@/types';
 import { required } from '@/utils';
 import { useRequest } from 'ahooks';
 import { UpdatePurchaseOrderReq } from './request';
 import { useUserStore } from '@/models';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 
 interface Props extends ModalProps {
   record?: PurchaseOrder;
@@ -17,9 +18,14 @@ export const EditPurchaseOrderModal = React.memo((props: Props) => {
 
   const [form] = Form.useForm();
 
+  const navigate = useNavigate();
   const updatePurchaseOrderReq = useRequest(UpdatePurchaseOrderReq, {
     manual: true,
     onSuccess: onOk,
+    onError: () => {
+      message.error('身份信息过期，修改失败，请重新登录');
+      navigate('/login');
+    },
   });
   const { jwt = '' } = useUserStore().userInfo;
 

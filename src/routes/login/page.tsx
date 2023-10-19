@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Form, Input, Checkbox, Button, Typography } from 'antd';
+import { Card, Form, Input, Checkbox, Button, Typography, message } from 'antd';
 import { LoginReq } from '@/requests';
 import { useRequest } from 'ahooks';
 import { UserInfo, useUserStore } from '@/models';
@@ -18,6 +18,9 @@ const LoginPage = React.memo(() => {
       userModel.setUserInfo(data);
       navigate('/');
     },
+    onError: () => {
+      message.error('登录失败，请重试');
+    },
   });
 
   return (
@@ -34,11 +37,14 @@ const LoginPage = React.memo(() => {
           <Form
             form={form}
             layout={'vertical'}
-            onFinish={() => loginReq.run(form.getFieldsValue())}
+            onFinish={loginReq.run}
+            initialValues={{
+              remember: false,
+            }}
           >
             <Form.Item
               label={'用户名'}
-              name={'username'}
+              name={'id'}
               rules={[required()]}
             >
               <Input size={'large'} />
@@ -52,7 +58,7 @@ const LoginPage = React.memo(() => {
             </Form.Item>
             <div className={'flex justify-between items-center pb5'}>
               <Form.Item noStyle name={'remember'} valuePropName={'checked'}>
-                <Checkbox>记住我</Checkbox>
+                <Checkbox>14日无需登录</Checkbox>
               </Form.Item>
               <Form.Item noStyle>
                 <Typography.Link disabled className={'h-fit'} href={'/register'}>

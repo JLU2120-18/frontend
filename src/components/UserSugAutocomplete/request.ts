@@ -1,14 +1,13 @@
-import { sleep } from '@/utils';
-import Mock from 'mockjs';
+import { api } from '@/requests';
 
 interface UserSugRequest {
   id: string;
+  jwt: string;
 }
 
 export const UserSugReq = async (params: UserSugRequest) => {
-  await sleep(500);
-  console.log('user sug', params);
-  return Mock.mock({
-    'data|10': ['@id'],
+  const result = await api.get('/employee/sug', {
+    params,
   });
+  return result.data;
 };

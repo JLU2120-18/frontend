@@ -3,16 +3,17 @@ import { AutoComplete, AutoCompleteProps } from 'antd';
 import { useRequest } from 'ahooks';
 import { UserSugReq } from './request';
 import { debounce } from 'lodash-es';
+import { useUserStore } from '@/models';
 
 interface Props extends AutoCompleteProps {}
-// interface Props extends InputProps {}
 
 export const UserSugAutoComplete = React.memo((props: Props) => {
   const userSugReq = useRequest(UserSugReq, {
     manual: true,
   });
 
-  const handleSearch = debounce((id) => userSugReq.run({ id }), 200);
+  const { jwt = '' } = useUserStore().userInfo;
+  const handleSearch = debounce((id) => userSugReq.run({ id, jwt }), 200);
 
   const sugs = (userSugReq.data?.data ?? []).map((value: string) => ({ value }));
 

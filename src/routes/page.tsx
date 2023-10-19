@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Divider, Table, TableProps, Typography } from 'antd';
+import { Button, Divider, message, Table, TableProps, Typography } from 'antd';
 import { useUserStore } from '@/models';
 import { useRequest } from 'ahooks';
 import { GetUserInfoReq } from '@/requests';
@@ -8,6 +8,7 @@ import { BaseDataType, BusinessDataType, SocietyDataType } from './type';
 import { CreateEmployeeReportModal, UpdatePaymentButton, UpdatePaymentModal } from '@/components';
 import { toCamel } from '@/utils';
 import { ROLE_MAP } from '@/constants';
+import { useNavigate } from 'react-router-dom';
 
 const AppPage = React.memo(() => {
   const userModel  = useUserStore();
@@ -18,12 +19,17 @@ const AppPage = React.memo(() => {
     [role],
   );
 
+  const navigate = useNavigate();
   const getUserInfoReq = useRequest(GetUserInfoReq, {
     defaultParams: [{ jwt: jwt ?? '' }],
     onSuccess: (data) => {
       userModel.setBusinessInfo({
         ...data,
       });
+    },
+    onError: () => {
+      message.error('身份信息已过期，请重新登陆');
+      navigate('/login');
     },
   });
 
@@ -43,9 +49,9 @@ const AppPage = React.memo(() => {
   const SOCIETY_COLUMN = React.useMemo(
     () => {
       const columns: ColumnsType<SocietyDataType> = [
-        { title: '社保卡', dataIndex: 'socsec_id' },
-        { title: '税率(%)', dataIndex: 'tax_rate' },
-        { title: '其他费用(元)', dataIndex: 'other_cast' },
+        { title: '社保卡', dataIndex: 'socsecId' },
+        { title: '税率(%)', dataIndex: 'taxRate' },
+        { title: '其他费用(元)', dataIndex: 'otherCast' },
       ];
       return columns;
     },
@@ -63,14 +69,14 @@ const AppPage = React.memo(() => {
             :v === 'wage' ? '时薪'
               : v === 'commission' ? '佣金' : 'UNKNOWN' },
         { title: '发薪方式', dataIndex: 'payment', render: (v) => <UpdatePaymentButton v={v} onClick={() => setOpen(true)} /> },
-        { title: '工时限制/时', dataIndex: 'duration_limit' },
+        { title: '工时限制/时', dataIndex: 'durationLimit' },
       ];
       switch (type) {
       case 'salary': columns.push({ title: '工资(元/月)', dataIndex: 'salary' });
         break;
-      case 'wage': columns.push({ title: '时薪(元/时)', dataIndex: 'hour_wage' });
+      case 'wage': columns.push({ title: '时薪(元/时)', dataIndex: 'hourWage' });
         break;
-      case 'commission': columns.push({ title:'佣金率(%)', dataIndex: 'commission_rate' });
+      case 'commission': columns.push({ title:'佣金率(%)', dataIndex: 'commissionRate' });
         break;
       }
       return columns;
@@ -84,11 +90,11 @@ const AppPage = React.memo(() => {
       const { payment } = getUserInfoReq.data;
       switch (payment) {
       case 'mail':
-        return [{ title: '邮件地址', dataIndex: 'mail_address' }];
+        return [{ title: '邮件地址', dataIndex: 'mailAddress' }];
       case 'bank':
         return [
-          { title: '银行名称', dataIndex: 'bank_name' },
-          { title: '银行账户', dataIndex: 'bank_account' },
+          { title: '银行名称', dataIndex: 'bankName' },
+          { title: '银行账户', dataIndex: 'bankAccount' },
         ];
       }
       return [];
