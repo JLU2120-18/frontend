@@ -1,4 +1,3 @@
-import { sleep } from '@/utils';
 import { api } from '@/requests/main.ts';
 
 interface GetTimeCardRequest {
@@ -8,7 +7,15 @@ interface GetTimeCardRequest {
 }
 export const GetTimeCardReq = async (params: GetTimeCardRequest) => {
   const result = await api.get('/timecard/get', { params });
-  return result.data;
+  const data = result.data;
+
+  // FIXME
+  data.data = data.data.map(({ timeCard, data }: any) => ({
+    ...timeCard,
+    data,
+  }));
+
+  return data;
 };
 
 interface UpdateTimeCardRequest {
@@ -20,7 +27,6 @@ interface UpdateTimeCardRequest {
   }[];
 }
 export const UpdateTimeCardReq = async (params: UpdateTimeCardRequest) => {
-  await sleep(4000);
-  console.log(params);
-  return {};
+  const result = await api.post('/timecard/update', params);
+  return result.data;
 };

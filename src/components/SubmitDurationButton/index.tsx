@@ -1,10 +1,12 @@
 import React from 'react';
-import { Button, Form, Input, InputNumber, Popover, Space, Table } from 'antd';
+import { Button, Form, Input, InputNumber, message, Popover, Space, Table } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { required } from '@/utils';
 import { useRequest } from 'ahooks';
 import { UpdateTimeCardReq } from '@/requests';
 import { uniq } from 'lodash-es';
+import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '@/models';
 
 interface Props {
   record: Record<string, any>;
@@ -20,22 +22,30 @@ const COLUMNS = [
 export const SubmitDurationButton = React.memo(({ record, limit, onOk }: Props) => {
   const [form] = Form.useForm();
 
+  const navigate = useNavigate();
   const updateTimeCardReq = useRequest(UpdateTimeCardReq, {
     manual: true,
     onSuccess: () => {
       onOk?.();
     },
+    onError: () => {
+      message.error('身份信息过期，提报失败，请重新登录');
+      navigate('/login');
+    },
   });
 
   const [open, setOpen] = React.useState(false);
+  const { jwt = '' } = useUserStore().userInfo;
   const handleFinish = async (data: Record<string, any>) => {
     const newData = {
+      ...record,
       ...data,
     };
     delete newData.isSave;
 
     // FIXME
     updateTimeCardReq.run({
+      jwt,
       ...newData,
     } as any);
     setOpen(false);
