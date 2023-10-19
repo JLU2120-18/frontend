@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth } from '@/hooks';
 import { Button, Input, message, Pagination, Table, Typography } from 'antd';
 import { usePagination } from 'ahooks';
-import { GetPurchaseOrderReq } from './request';
+import { GetsPurchaseOrderReq } from './request';
 import { useUserStore } from '@/models';
 import { ColumnProps } from 'antd/es/table';
 import { PurchaseOrder } from '@/types';
@@ -12,6 +12,7 @@ import {
   DeletePurchaseOrderButton,
   EditPurchaseOrderModal,
 } from '@/components';
+import { useNavigate } from 'react-router-dom';
 
 const PurchasePage = React.memo(() => {
   useAuth(['commission']);
@@ -19,13 +20,20 @@ const PurchasePage = React.memo(() => {
   const userModel = useUserStore();
   const { jwt = '' } = userModel.userInfo;
   const [searchV, setSearchV] = React.useState('');
+  const navigate = useNavigate();
   const pagination = usePagination(
-    ({ current, pageSize }) => GetPurchaseOrderReq({
+    ({ current, pageSize }) => GetsPurchaseOrderReq({
       id: searchV,
       jwt,
       pageSize,
       pageIndex: current,
     }),
+    {
+      onError: () => {
+        message.error('身份信息过期，获取失败，请重新登录');
+        navigate('/login');
+      },
+    },
   );
 
   const handleDelete = () => {
