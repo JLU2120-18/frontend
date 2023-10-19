@@ -1,13 +1,11 @@
 import { PurchaseOrder } from '@/types';
-import { sleep } from '@/utils';
+import { api } from '@/requests';
 
 interface UpdatePurchaseOrderRequest extends PurchaseOrder {
   jwt: string;
 }
 
 export const UpdatePurchaseOrderReq = async (params: UpdatePurchaseOrderRequest) => {
-  await sleep(3000);
-
-  console.log('update purchase order', params);
-  return {};
+  const result = await api.post('/purchase/update', params);
+  return result.data;
 };
