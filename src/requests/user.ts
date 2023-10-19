@@ -64,8 +64,6 @@ interface UpdatePaymentRequest {
   mail_address?: string;
 }
 export const UpdatePaymentReq = async (params: UpdatePaymentRequest) => {
-  await sleep(2000);
-  console.log(params);
-
-  return {};
+  const result = await api.post('/employee/payment', params);
+  return result.data;
 };

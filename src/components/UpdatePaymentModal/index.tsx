@@ -4,6 +4,8 @@ import { required, toSnake } from '@/utils';
 import { CondFormItem } from '@/components';
 import { useRequest } from 'ahooks';
 import { UpdatePaymentReq } from '@/requests';
+import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '@/models';
 
 const PAYMENT_OPTIONS = [
   { label: '银行支付', value: 'bank' },
@@ -23,6 +25,7 @@ export const UpdatePaymentModal = React.memo((props: Props) => {
 
   const [form] = Form.useForm();
 
+  const navigate = useNavigate();
   const updatePaymentReq = useRequest(UpdatePaymentReq, {
     manual: true,
     onSuccess: (data) => {
@@ -30,14 +33,19 @@ export const UpdatePaymentModal = React.memo((props: Props) => {
       onOk?.(data as any);
     },
     onError: () => {
-      message.error('修改失败');
+      message.error('身份信息过期，修改失败，请重新登录');
+      navigate('/login');
     },
   });
 
+  const { jwt = '' } = useUserStore().userInfo;
   const handleOk = async () => {
     try {
       await form.validateFields();
-      updatePaymentReq.run(form.getFieldsValue());
+      updatePaymentReq.run({
+        ...form.getFieldsValue(),
+        jwt,
+      });
     }
     catch(e: any) {
       console.log('update payment error: ', e);

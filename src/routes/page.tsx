@@ -23,7 +23,6 @@ const AppPage = React.memo(() => {
   const getUserInfoReq = useRequest(GetUserInfoReq, {
     defaultParams: [{ jwt: jwt ?? '' }],
     onSuccess: (data) => {
-      console.log('data', data);
       userModel.setBusinessInfo({
         ...data,
       });
