@@ -1,23 +1,10 @@
-import { sleep } from '@/utils';
-import Mock from 'mockjs';
+import { api } from '@/requests';
 
 export const GetAvailableTimeCardReq = async (params: {jwt: string}) => {
-  await sleep(1000);
-
-  console.log(params);
-
-  return Mock.mock({
-    'data|10': [
-      {
-        id: '@guid',
-        projectName: '@first',
-        isSave: false,
-        startTime: '@date',
-        endTime: '@date',
-        'duration|10-40': 1,
-      },
-    ],
+  const result = await api.get('/timecard/available', {
+    params,
   });
+  return result.data;
 };
 
 interface CreateEmployeeReportRequest {
@@ -30,77 +17,13 @@ interface CreateEmployeeReportRequest {
 }
 
 export const CreateEmployeeReportReq = async (params: CreateEmployeeReportRequest) => {
-  await sleep(2000);
-
-  console.log(params);
-  switch (params.type) {
-  case 'duration':
-    return Mock.mock({
-      'data|1-5': [{
-        employeeId: '@id',
-        employeeName: '@first',
-        startTime: '@date',
-        endTime: '@date',
-        'duration|10-40': 1,
-      }],
-    });
-  case 'proj_duration':
-    return Mock.mock({
-      'data|1-5': [{
-        employeeId: '@id',
-        employeeName: '@first',
-        startTime: '@date',
-        endTime: '@date',
-        'data|1-3':[
-          {
-            projectName: '@last',
-            'duration|10-40': 1,
-          },
-        ],
-      }],
-    });
-  case 'vacation':
-    return Mock.mock({
-      'data|1-5': [{
-        employeeId: '@id',
-        employeeName: '@first',
-        startTime: '@date',
-        endTime: '@date',
-        days: '@integer(10,20)',
-      }],
-    });
-  case 'salary':
-    return Mock.mock({
-      'data|1-5': [{
-        employeeId: '@id',
-        employeeName: '@first',
-        startTime: '@date',
-        endTime: '@date',
-        'salary|4000-8000': 1,
-      }],
-    });
-  case 'employee_duration':
-    return Mock.mock({
-      data: [{
-        employeeId: '@id',
-        employeeName: '@name',
-        startTime: '@date',
-        endTime: '@date',
-        duration: '@integer(40,50)',
-      }],
-    });
-  case 'employee_salary':
-    return Mock.mock({
-      data: [{
-        employeeId: '@id',
-        employeeName: '@name',
-        startTime: '@date',
-        endTime: '@date',
-        salary: '@integer(40000,50000)',
-      }],
-    });
+  if (['duration', 'proj_duration', 'vacation', 'salary'].includes(params.type)) {
+    const result = await api.post('/employee_report/create', params);
+    return result.data;
   }
-  return {
-    data: [],
-  };
+  const result = await api.post('/admin_report/create', {
+    ...params,
+    type: params.type === 'employee_duration' ? 'duration' : 'salary',
+  });
+  return result.data;
 };

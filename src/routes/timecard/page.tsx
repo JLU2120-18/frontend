@@ -5,13 +5,20 @@ import { GetTimeCardReq } from '@/requests';
 import { SubmitDurationButton } from '@/components';
 import { useUserStore } from '@/models';
 import { useAuth } from '@/hooks';
+import { useNavigate } from 'react-router-dom';
 
 const TimeCardPage = React.memo(() => {
   useAuth(['employee', 'commission']);
 
   const userModel = useUserStore();
   const { duration_limit: limit } = userModel.businessInfo;
-  const pagination = usePagination((params) => GetTimeCardReq({ ...params, jwt }));
+  const navigate = useNavigate();
+  const pagination = usePagination(({ current, pageSize }) => GetTimeCardReq({ pageIndex: current, pageSize, jwt }), {
+    onError: () => {
+      message.error('身份信息过期，获取失败，请重新登陆');
+      navigate('/login');
+    },
+  });
   const handleOk = () => {
     message.success('提报成功');
     pagination.refresh();
