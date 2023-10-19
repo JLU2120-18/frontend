@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks';
 import { useNavigate } from 'react-router-dom';
 
 const TimeCardPage = React.memo(() => {
-  useAuth(['employee', 'commission']);
+  useAuth(['employee']);
 
   const userModel = useUserStore();
   const { duration_limit: limit } = userModel.businessInfo;
