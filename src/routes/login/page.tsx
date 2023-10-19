@@ -58,7 +58,7 @@ const LoginPage = React.memo(() => {
             </Form.Item>
             <div className={'flex justify-between items-center pb5'}>
               <Form.Item noStyle name={'remember'} valuePropName={'checked'}>
-                <Checkbox>记住我</Checkbox>
+                <Checkbox>14日无需登录</Checkbox>
               </Form.Item>
               <Form.Item noStyle>
                 <Typography.Link disabled className={'h-fit'} href={'/register'}>

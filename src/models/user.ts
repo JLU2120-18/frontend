@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface UserInfo {
   id: string;
@@ -17,21 +18,26 @@ interface State {
 }
 
 export const useUserStore = create<State>()(
-  (set) => ({
-    userInfo: {},
-    businessInfo: {},
-    setUserInfo: (userInfo: UserInfo) => set((state) => {
-      state.userInfo = userInfo;
-      return state;
+  persist(
+    (set) => ({
+      userInfo: {},
+      businessInfo: {},
+      setUserInfo: (userInfo: UserInfo) => set((state) => {
+        state.userInfo = userInfo;
+        return state;
+      }),
+      setBusinessInfo: (businessInfo: any) => set((state) => {
+        state.businessInfo = businessInfo;
+        return state;
+      }),
+      reset: () => set((state: State) => {
+        state.userInfo = {};
+        state.businessInfo = {};
+        return state;
+      }),
     }),
-    setBusinessInfo: (businessInfo: any) => set((state) => {
-      state.businessInfo = businessInfo;
-      return state;
-    }),
-    reset: () => set((state: State) => {
-      state.userInfo = {};
-      state.businessInfo = {};
-      return state;
-    }),
-  }),
+    {
+      name: 'user',
+    },
+  ),
 );
