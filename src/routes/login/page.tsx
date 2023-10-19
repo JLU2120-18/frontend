@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Form, Input, Checkbox, Button, Typography } from 'antd';
+import { Card, Form, Input, Checkbox, Button, Typography, message } from 'antd';
 import { LoginReq } from '@/requests';
 import { useRequest } from 'ahooks';
 import { UserInfo, useUserStore } from '@/models';
@@ -18,6 +18,9 @@ const LoginPage = React.memo(() => {
       userModel.setUserInfo(data);
       navigate('/');
     },
+    onError: () => {
+      message.error('登录失败，请重试');
+    },
   });
 
   return (
@@ -34,7 +37,10 @@ const LoginPage = React.memo(() => {
           <Form
             form={form}
             layout={'vertical'}
-            onFinish={() => loginReq.run(form.getFieldsValue())}
+            onFinish={loginReq.run}
+            initialValues={{
+              remember: false,
+            }}
           >
             <Form.Item
               label={'用户名'}

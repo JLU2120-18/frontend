@@ -14,16 +14,6 @@ export const LoginReq = async (params: LoginReqParams) => {
 
   const result = await api.post('/auth/login', params);
   return result.data;
-
-  // return api.post('/auth/login', params);
-  // return api.post('/auth/login');
-  //
-  // return Mock.mock({
-  //   id: '@id',
-  //   username: '@first',
-  //   role: Mock.Random.pick(['employee', 'commission', 'payroll']),
-  //   jwt: '@guid',
-  // });
 };
 
 interface RegisterReqParams {
