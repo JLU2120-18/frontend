@@ -3,6 +3,7 @@ import { Button, message, Popover } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { DeletePurchaseReq } from './request';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   id: string;
@@ -13,11 +14,16 @@ interface Props {
 export const DeletePurchaseOrderButton = React.memo((props: Props) => {
   const { id, jwt, onDelete } = props;
 
+  const navigate = useNavigate();
   const deletePurchaseOrderReq = useRequest(DeletePurchaseReq, {
     manual: true,
     onSuccess: () => {
       message.success('删除成功');
       onDelete?.(id);
+    },
+    onError: () => {
+      message.error('身份信息过期，删除失败，请重新登录');
+      navigate('/login');
     },
   });
 
