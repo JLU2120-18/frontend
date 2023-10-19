@@ -38,7 +38,7 @@ const LoginPage = React.memo(() => {
           >
             <Form.Item
               label={'用户名'}
-              name={'username'}
+              name={'id'}
               rules={[required()]}
             >
               <Input size={'large'} />

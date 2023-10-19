@@ -17,6 +17,7 @@
     "@ant-design/icons": "^5.2.6",
     "ahooks": "^3.7.8",
     "antd": "^5.10.0",
+    "axios": "^1.5.1",
     "dayjs": "^1.11.10",
     "html2canvas": "^1.4.1",
     "lodash-es": "^4.17.21",

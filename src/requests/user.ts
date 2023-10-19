@@ -1,22 +1,29 @@
 import { sleep } from '@/utils';
 import Mock from 'mockjs';
+import { api } from '@/requests/main.ts';
 
 interface LoginReqParams {
-  username: string;
+  id: string;
   password: string;
   remember: boolean;
 }
 
 export const LoginReq = async (params: LoginReqParams) => {
-  await sleep(1000);
+  // await sleep(1000);
   console.log(params);
 
-  return Mock.mock({
-    id: '@id',
-    username: '@first',
-    role: Mock.Random.pick(['employee', 'commission', 'payroll']),
-    jwt: '@guid',
-  });
+  const result = await api.post('/auth/login', params);
+  return result.data;
+
+  // return api.post('/auth/login', params);
+  // return api.post('/auth/login');
+  //
+  // return Mock.mock({
+  //   id: '@id',
+  //   username: '@first',
+  //   role: Mock.Random.pick(['employee', 'commission', 'payroll']),
+  //   jwt: '@guid',
+  // });
 };
 
 interface RegisterReqParams {
