@@ -13,6 +13,7 @@ import {
   EditPurchaseOrderModal,
 } from '@/components';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const PurchasePage = React.memo(() => {
   useAuth(['commission']);
@@ -50,7 +51,7 @@ const PurchasePage = React.memo(() => {
         { title: '产品', dataIndex: 'productName' },
         { title: '联系电话', dataIndex: 'phone' },
         { title: '住址', dataIndex: 'address' },
-        { title: '日期', dataIndex: 'date' },
+        { title: '日期', dataIndex: 'date', render: (v) => dayjs(v).format('YYYY-MM-DD hh:mm:ss') },
         { title: '金额', dataIndex: 'pay' },
         { title: '查看', render: (_: unknown, record: PurchaseOrder) => (
           <div className={'flex gap-3'}>
